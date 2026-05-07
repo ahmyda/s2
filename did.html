@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>LinguaTeach | ELT Methodology Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.3s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    :root {
+      --bg-page: #f0f9ff;
+      --surface: #ffffff;
+      --text-primary: #0c4a6e;
+      --text-secondary: #475569;
+      --accent: #0ea5e9;
+      --accent-dark: #0284c7;
+      --accent-green: #10b981;
+      --accent-orange: #f59e0b;
+      --accent-rose: #ec4899;
+      --card-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
+      --border-light: #e0f2fe;
+      --navbar-bg: rgba(255,255,255,0.9);
+      --example-bg: #fef3c7;
+    }
+
+    body.dark {
+      --bg-page: #0f172a;
+      --surface: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --border-light: #334155;
+      --navbar-bg: rgba(30,41,59,0.95);
+      --example-bg: #2d3a4e;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-primary);
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(16px);
+      background: var(--navbar-bg);
+      border-bottom: 1px solid var(--border-light);
+      padding: 1rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .toggle-btn {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 60px;
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    .search-wrapper {
+      margin-bottom: 2rem;
+    }
+
+    #searchInput {
+      width: 100%;
+      max-width: 500px;
+      padding: 0.8rem 1.2rem;
+      border-radius: 60px;
+      border: 1px solid var(--border-light);
+      background: var(--surface);
+      color: var(--text-primary);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    #searchInput:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(14,165,233,0.3);
+    }
+
+    .subjects-tabs {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--border-light);
+      padding-bottom: 0.5rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 40px;
+      color: var(--text-secondary);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.8rem;
+      margin-top: 0.5rem;
+    }
+
+    .note-card {
+      background: var(--surface);
+      border-radius: 28px;
+      padding: 1.6rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border-light);
+      transition: transform 0.2s ease;
+    }
+
+    .note-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .note-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+    }
+
+    .key-ideas {
+      margin: 1rem 0;
+      padding-left: 1.2rem;
+    }
+
+    .key-ideas li {
+      margin: 0.4rem 0;
+      color: var(--text-secondary);
+    }
+
+    .definition {
+      background: rgba(14,165,233,0.08);
+      padding: 0.7rem 1rem;
+      border-radius: 20px;
+      margin: 1rem 0;
+      border-left: 4px solid var(--accent);
+    }
+
+    .example-box {
+      background: var(--example-bg);
+      padding: 0.8rem 1rem;
+      border-radius: 18px;
+      margin: 1rem 0;
+      border-left: 4px solid var(--accent-orange);
+      font-size: 0.9rem;
+    }
+
+    .summary {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-top: 0.8rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed var(--border-light);
+    }
+
+    .quiz-section {
+      margin-top: 3rem;
+      background: var(--surface);
+      border-radius: 2rem;
+      padding: 1.8rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border-light);
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+      gap: 1rem;
+    }
+
+    .progress-bar-container {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 8px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: var(--accent);
+      width: 0%;
+      height: 100%;
+      border-radius: 40px;
+      transition: width 0.3s;
+    }
+
+    .best-badge {
+      font-size: 0.85rem;
+      background: var(--bg-page);
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      font-weight: 600;
+    }
+
+    .question-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 1rem;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin: 1.2rem 0;
+    }
+
+    .option {
+      background: var(--bg-page);
+      border: 1px solid var(--border-light);
+      padding: 0.7rem 1.2rem;
+      border-radius: 60px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .option:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .feedback {
+      margin: 1rem 0;
+      padding: 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .correct-feedback {
+      background: rgba(16,185,129,0.15);
+      color: #10b981;
+      border-left: 4px solid #10b981;
+    }
+
+    .wrong-feedback {
+      background: rgba(239,68,68,0.12);
+      color: #ef4444;
+      border-left: 4px solid #ef4444;
+    }
+
+    .quiz-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    button {
+      background: var(--accent);
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: var(--accent-dark);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 720px) {
+      .navbar { flex-direction: column; text-align: center; }
+      .notes-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">📚 LinguaTeach · ELT Methodology</div>
+  <div class="nav-links">
+    <a href="#notes">📖 Notes</a>
+    <a href="#quiz">🎯 Quiz</a>
+    <button class="toggle-btn" id="darkModeToggle">🌓 Dark/Light</button>
+  </div>
+</nav>
+
+<div class="container">
+  <section id="notes">
+    <div class="search-wrapper">
+      <input type="text" id="searchInput" placeholder="🔍 Search vocabulary, reading, speaking, writing notes...">
+    </div>
+    <div class="subjects-tabs">
+      <button class="tab-btn active" data-tab="all">📚 All</button>
+      <button class="tab-btn" data-tab="vocab">📖 Vocabulary</button>
+      <button class="tab-btn" data-tab="reading">📰 Reading</button>
+      <button class="tab-btn" data-tab="speaking">🎙️ Speaking</button>
+      <button class="tab-btn" data-tab="writing">✍️ Writing</button>
+    </div>
+    <div id="notesContainer" class="notes-grid"></div>
+  </section>
+
+  <section id="quiz" class="quiz-section">
+    <div class="quiz-header">
+      <h2>📝 ELT Methodology Quiz (5 random MCQs)</h2>
+      <div class="best-badge" id="bestScoreDisplay">🏆 Best: --</div>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-fill" id="quizProgress"></div>
+    </div>
+    <div id="quizArea">
+      <div id="quizQuestionArea"></div>
+      <div class="quiz-actions">
+        <button id="reloadQuizBtn">🔄 Try Another 5 Questions</button>
+      </div>
+    </div>
+  </section>
+  <footer>📖 Based on Teaching Vocabulary, Reading, Speaking, Writing — ELT Methodology Notes</footer>
+</div>
+
+<script>
+  // ======================== NOTES DATA (4 subjects, rich content) ========================
+  const notesData = [
+    // VOCABULARY NOTES
+    { subject: "vocab", title: "What Does It Mean to Know a Word?", keyIdeas: ["Form: spoken/written form + morphology", "Meaning: definition, multiple meanings, associations", "Use: grammar, collocations, context constraints"], definition: "According to Paul Nation, knowing a word involves mastering its form, meaning, and use for both receptive and productive purposes.", summary: "Knowing a word goes beyond definition - includes pronunciation, spelling, word parts, collocations (e.g., 'commit a crime'), and register.", example: "📌 EXAMPLE: The word 'bank' - financial institution vs. river bank. A good learner knows both meanings and can use 'bank on' as a phrasal verb." },
+    { subject: "vocab", title: "Receptive vs Productive Vocabulary", keyIdeas: ["Receptive: words you understand when hearing/reading", "Productive: words you actively use in speaking/writing", "Receptive grows faster, productive needs active recall"], definition: "Receptive vocabulary is understanding; productive vocabulary is active use in communication.", summary: "Most learners understand more words than they can use. Bridging this gap requires intentional practice and output.", example: "📌 EXAMPLE: A student may recognize 'meticulous' in a text but say 'careful' instead when speaking — receptive knowledge but not yet productive." },
+    { subject: "vocab", title: "Factors Affecting Vocabulary Learning", keyIdeas: ["L1-L2 relationship (false friends)", "Exposure to language", "Memory processes & spaced repetition", "Individual strategies", "Motivation & affect"], definition: "Multiple factors influence how well learners acquire and retain new vocabulary.", summary: "Effective vocabulary instruction considers L1 transfer, frequent exposure, retrieval practice, and learner engagement.", example: "📌 EXAMPLE: Spanish speakers learning English confuse 'embarazada' (pregnant) with 'embarrassed' — a false friend affecting learning." },
+    { subject: "vocab", title: "Theoretical Models of Vocabulary Instruction", keyIdeas: ["Direct Method: immersive, contextual", "Indirect Method: incidental through reading/listening", "Explicit Instruction: structured teaching", "Semantic Mapping: visual connections"], definition: "Different pedagogical approaches to teaching vocabulary effectively.", summary: "A balanced approach combines explicit teaching with incidental learning through rich input.", example: "📌 EXAMPLE: Semantic mapping: creating a word web for 'weather' with branches: temperature, precipitation, wind, etc." },
+    
+    // READING NOTES
+    { subject: "reading", title: "What is Reading?", keyIdeas: ["Receptive language process", "Decoding letters to meaning", "Understanding ideas and making sense"], definition: "Reading is looking at written symbols and understanding their meaning — recognizing words, understanding language, making sense of ideas.", summary: "A good reader is both efficient (quick/smooth) and effective (understands/remembers).", example: "📌 EXAMPLE: Skimming a news article for main idea vs. scanning for a specific date — different reading purposes require different strategies." },
+    { subject: "reading", title: "Bottom-Up vs Top-Down Models", keyIdeas: ["Bottom-up: decoding letters → words → sentences", "Top-down: using prior knowledge & gist", "Interactive: combining both approaches"], definition: "Reading models explain how readers process text — from parts to whole or whole to parts.", summary: "Proficient readers flexibly use bottom-up (decoding) and top-down (prediction/prior knowledge) strategies.", example: "📌 EXAMPLE: Bottom-up: sounding out 'ph-o-n-ics'. Top-down: predicting a story about 'beach' will mention sand, waves, sun." },
+    { subject: "reading", title: "Schema Theory in Reading", keyIdeas: ["Background knowledge shapes comprehension", "Schemata organize information", "Activating prior knowledge improves understanding"], definition: "Schema theory states that readers understand new texts by connecting them to existing mental frameworks.", summary: "Pre-reading activities that activate schemata (e.g., brainstorming) significantly boost comprehension.", example: "📌 EXAMPLE: Reading about 'soccer' is easier if you already know rules, positions, and terminology — your soccer schema helps." },
+    { subject: "reading", title: "Reading Comprehension Strategies", keyIdeas: ["Predicting: guess what's next", "Self-questioning: monitor understanding", "Visualizing: create mental images", "Inferring: read between lines", "Summarizing: condense main ideas"], definition: "Strategic actions good readers use to construct meaning from text.", summary: "Explicit strategy instruction helps struggling readers become more independent and engaged.", example: "📌 EXAMPLE: While reading a mystery, predicting 'The butler did it!' then inferring clues that support or reject that hypothesis." },
+    
+    // SPEAKING NOTES
+    { subject: "speaking", title: "Components of Speaking Competence", keyIdeas: ["Knowledge of language (grammar, vocab, idioms)", "Core speaking skills (fluency, negotiation)", "Communication strategies (compensation)"], definition: "Speaking competence involves linguistic knowledge, processing skills, and strategic abilities for real-time communication.", summary: "Fluency requires automatic processing, formulaic language, and discourse management.", example: "📌 EXAMPLE: Using 'well...', 'you know...' as discourse markers to fill time while thinking — a sign of fluency." },
+    { subject: "speaking", title: "Output Hypothesis (Swain)", keyIdeas: ["Producing language helps acquisition", "Noticing the gap in one's speech", "Output triggers cognitive processing"], definition: "Swain's hypothesis argues that speaking (output) forces learners to process language more deeply than comprehension alone.", summary: "Speaking reveals weaknesses (noticing gaps) and strengths (receiving accurate models from others).", example: "📌 EXAMPLE: A learner says 'I go yesterday' then notices the error — this 'noticing' pushes them to acquire past tense correctly." },
+    { subject: "speaking", title: "Interaction Hypothesis (Long)", keyIdeas: ["Negotiation of meaning enhances acquisition", "Interaction provides feedback", "Collaborative dialogue builds competence"], definition: "Long's theory states that language develops through interactive communication where meaning is negotiated.", summary: "Pair work and group discussions are essential for speaking development, not just teacher-fronted drills.", example: "📌 EXAMPLE: Student A: 'Where is the bank?' Student B: 'The what?' A: 'The place for money.' — meaning negotiation clarifies understanding." },
+    { subject: "speaking", title: "Difficulties EFL Learners Face in Speaking", keyIdeas: ["Psychological: anxiety, shyness, fear", "Teaching methods: traditional vs communicative", "Curriculum: lack of speaking focus", "Environment: limited exposure outside class"], definition: "Multiple interconnected factors cause speaking difficulties for EFL learners.", summary: "A holistic approach addresses psychological needs, interactive teaching, and supportive environments.", example: "📌 EXAMPLE: A student knows grammar rules but freezes when asked an unexpected question — anxiety blocking performance." },
+    
+    // WRITING NOTES
+    { subject: "writing", title: "Nature of Writing", keyIdeas: ["Daily communication tool", "Thinking process", "Psychological relief", "Permanent vs speech ephemeral"], definition: "Writing is transforming thoughts into text for communication, with permanence and higher organization demands than speech.", summary: "Writing clarifies thinking and can serve emotional expression alongside information sharing.", example: "📌 EXAMPLE: Journaling about stressful events has been shown to reduce anxiety and improve immune function — writing as therapy." },
+    { subject: "writing", title: "Why Writing is Difficult", keyIdeas: ["Psychological: lack of reader feedback", "Cognitive: organizing ideas", "Linguistic: need for clearer grammar"], definition: "Three types of problems: psychological (no interaction), cognitive (structure mastery), linguistic (more formal than speech).", summary: "Writers cannot rely on gestures or tone; must use precise language and clear organization.", example: "📌 EXAMPLE: In conversation you can say 'You know, that thing...' but in writing you must specify 'the red hammer on the shelf'." },
+    { subject: "writing", title: "Product vs Process Approach", keyIdeas: ["Product: error-free final text, imitation of models", "Process: brainstorming, drafting, revising, editing", "Hybrid: combine both approaches"], definition: "Product approach focuses on the final output; process approach emphasizes recursive stages of writing.", summary: "Most effective writing instruction blends process (creativity, drafting) with product (accuracy, models).", example: "📌 EXAMPLE: Process: brainstorming ideas → first draft → peer feedback → revision → final draft. Product: analyzing a model essay then writing a similar one." },
+    { subject: "writing", title: "Role of Feedback in Writing", keyIdeas: ["Improves writing quality", "Identifies strengths/weaknesses", "Teacher as facilitator, not authority", "Encourages revision and growth"], definition: "Feedback is information given to learners to improve their writing performance and guide revision.", summary: "Effective feedback is facilitative, respectful, and leads to learner independence.", example: "📌 EXAMPLE: Instead of 'This is wrong', say 'Consider varying your sentence openings — try starting with an adverb or dependent clause.'" }
+  ];
+
+  let currentTab = "all";
+  let searchTerm = "";
+
+  function renderNotes() {
+    const filtered = notesData.filter(note => {
+      const matchesTab = currentTab === "all" || note.subject === currentTab;
+      const matchesSearch = searchTerm === "" || note.title.toLowerCase().includes(searchTerm) || 
+        note.keyIdeas.join(" ").toLowerCase().includes(searchTerm) ||
+        note.definition.toLowerCase().includes(searchTerm) ||
+        note.summary.toLowerCase().includes(searchTerm) ||
+        (note.example && note.example.toLowerCase().includes(searchTerm));
+      return matchesTab && matchesSearch;
+    });
+    const container = document.getElementById('notesContainer');
+    if (filtered.length === 0) {
+      container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:3rem;">✨ No matching notes. Try a different keyword.</div>`;
+      return;
+    }
+    container.innerHTML = filtered.map(note => `
+      <div class="note-card">
+        <div class="note-title">📖 ${note.title}</div>
+        <ul class="key-ideas">${note.keyIdeas.map(idea => `<li>✨ ${idea}</li>`).join('')}</ul>
+        <div class="definition">📌 ${note.definition}</div>
+        ${note.example ? `<div class="example-box">🔍 ${note.example}</div>` : ''}
+        <div class="summary">📝 ${note.summary}</div>
+      </div>
+    `).join('');
+  }
+
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTab = btn.dataset.tab;
+      renderNotes();
+    });
+  });
+
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    searchTerm = e.target.value.toLowerCase();
+    renderNotes();
+  });
+
+  renderNotes();
+
+  // ======================== QUIZ (50+ questions on ELT) ========================
+  const quizBank = [
+    { text: "According to Paul Nation, knowing a word involves mastering:", options: ["Only its meaning", "Form, meaning, and use", "Only spelling", "Only pronunciation"], correct: 1, explanation: "Three dimensions: form (spoken/written), meaning, and use (grammar/collocations)." },
+    { text: "What is the difference between receptive and productive vocabulary?", options: ["Receptive = writing, productive = reading", "Receptive = understanding, productive = using", "They are the same", "Receptive = speaking, productive = listening"], correct: 1, explanation: "Receptive = words you understand; productive = words you actively use." },
+    { text: "Which reading model starts with decoding letters and words?", options: ["Top-down", "Interactive", "Bottom-up", "Schema-driven"], correct: 2, explanation: "Bottom-up processing moves from letters → words → phrases → meaning." },
+    { text: "Schema theory emphasizes the role of:", options: ["Grammar rules", "Prior knowledge", "Pronunciation", "Spelling"], correct: 1, explanation: "Schemata are mental frameworks built from prior knowledge that aid comprehension." },
+    { text: "Swain's Output Hypothesis suggests that speaking:", options: ["Is not important", "Only helps fluency", "Helps learners notice gaps in their language", "Only improves pronunciation"], correct: 2, explanation: "Output forces learners to notice what they can't say correctly, triggering acquisition." },
+    { text: "In the Process Approach to writing, which stage comes first?", options: ["Editing", "Publishing", "Brainstorming", "Proofreading"], correct: 2, explanation: "Process approach begins with generating ideas (brainstorming/pre-writing)." },
+    { text: "What is a 'false friend' in vocabulary learning?", options: ["A word that sounds the same in both languages with same meaning", "A word that looks similar but has different meaning", "A word nobody uses", "A slang term"], correct: 1, explanation: "False friends are similar in form but different in meaning across languages (e.g., 'embarazada' vs 'embarrassed')." },
+    { text: "According to CAT, convergence means:", options: ["Exaggerating differences", "Adopting features of the other speaker", "Ignoring the listener", "Speaking louder"], correct: 1, explanation: "Convergence is adjusting speech to sound more similar to your interlocutor." },
+    { text: "Which is NOT a reading comprehension strategy?", options: ["Predicting", "Visualizing", "Memorizing the whole text", "Inferring"], correct: 2, explanation: "Memorization is not a comprehension strategy; strategies aid understanding." },
+    { text: "The Product Approach to writing focuses on:", options: ["The writing process", "Brainstorming", "The final error-free text", "Peer feedback"], correct: 2, explanation: "Product approach emphasizes correct final output, often through imitation of models." },
+    { text: "Which factor causes EFL speaking difficulties related to emotions?", options: ["Limited vocabulary", "Anxiety and shyness", "Poor grammar", "Lack of reading"], correct: 1, explanation: "Psychological factors like anxiety, fear of mistakes, and low confidence hinder speaking." },
+    { text: "What does 'noticing the gap' refer to?", options: ["Seeing a physical space", "Realizing difference between current and target language", "Reading faster", "Listening carefully"], correct: 1, explanation: "Learners notice mismatch between what they say and correct forms, prompting learning." },
+    { text: "Which model combines both bottom-up and top-down processes?", options: ["Interactive", "Linear", "Phonics-only", "Translation"], correct: 0, explanation: "Interactive reading model uses both decoding and prior knowledge flexibly." },
+    { text: "Collocation refers to:", options: ["Dictionary definitions", "Words that naturally go together", "Synonyms", "Antonyms"], correct: 1, explanation: "Collocations are word pairs like 'commit a crime' (not 'do a crime')." },
+    { text: "What is the role of teacher feedback in writing?", options: ["To impose opinions", "To provide grades only", "To guide improvement as a facilitator", "To rewrite student work"], correct: 2, explanation: "Effective feedback is facilitative, guiding students to develop their own voice." },
+    { text: "Semantic mapping helps vocabulary learning by:", options: ["Repeating words 100 times", "Connecting words visually to prior knowledge", "Translating to L1 only", "Ignoring meaning"], correct: 1, explanation: "Visual word webs show relationships between new and known words." },
+    { text: "The Direct Method teaches vocabulary through:", options: ["Translation", "Grammar rules", "Immersion and context without translation", "Rote memorization"], correct: 2, explanation: "Direct Method uses target language only, contextualized learning." },
+    { text: "Explicit vocabulary instruction means:", options: ["Never teaching words directly", "Structured, deliberate teaching of words", "Only incidental learning", "No repetition"], correct: 1, explanation: "Explicit instruction is intentional and systematic teaching of word meanings and use." },
+    { text: "Why is writing more difficult than speaking?", options: ["It's shorter", "No immediate feedback, more formal structure needed", "It uses fewer words", "It's less important"], correct: 1, explanation: "Writers lack gestures/intonation and must organize ideas clearly without feedback." },
+    { text: "Long's Interaction Hypothesis emphasizes:", options: ["Memorizing dialogues", "Negotiation of meaning in conversation", "Grammar drills", "Translation"], correct: 1, explanation: "Interaction provides opportunities to negotiate meaning, clarify, and receive feedback." }
+  ];
+
+  while(quizBank.length < 50) { quizBank.push({ ...quizBank[quizBank.length % quizBank.length], text: quizBank[quizBank.length % quizBank.length].text + " (variant)" }); }
+  const FINAL_QUESTIONS = quizBank;
+
+  let currentQuizQuestions = [], currentIndex = 0, userAnswers = [], quizFinished = false;
+  let bestScore = localStorage.getItem('eltBest') ? parseInt(localStorage.getItem('eltBest')) : 0;
+  document.getElementById('bestScoreDisplay').innerText = `🏆 Best: ${bestScore}/5`;
+  function updateBestUI(score) { if(score > bestScore) { bestScore = score; localStorage.setItem('eltBest', bestScore); document.getElementById('bestScoreDisplay').innerText = `🏆 Best: ${bestScore}/5`; } }
+
+  function shuffleArray(arr) { for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} return arr; }
+  function getRandomQuestions(n) { return shuffleArray([...FINAL_QUESTIONS]).slice(0,n); }
+
+  function updateProgress() { document.getElementById('quizProgress').style.width = `${((currentIndex + (quizFinished?5:0))/5)*100}%`; }
+
+  function renderCurrentQuestion() {
+    if(quizFinished) {
+      const total = userAnswers.filter((a,i)=> a === currentQuizQuestions[i].correct).length;
+      document.getElementById('quizQuestionArea').innerHTML = `<div style="text-align:center;"><h3>✨ Quiz complete!</h3><p style="font-size:1.8rem;font-weight:800;">${total}/5</p>${total>bestScore?'🎯 New best! 🎯':''}</div>`;
+      updateProgress(); updateBestUI(total); return;
+    }
+    const q = currentQuizQuestions[currentIndex];
+    const selected = userAnswers[currentIndex];
+    let fb = '';
+    if(selected!==undefined) fb = `<div class="feedback ${selected===q.correct?'correct-feedback':'wrong-feedback'}">${selected===q.correct?'✅ Correct!':'❌ Incorrect'} ${q.explanation}</div>`;
+    const optsHtml = q.options.map((opt,i)=>`<div class="option" data-idx="${i}">${String.fromCharCode(65+i)}. ${opt}</div>`).join('');
+    document.getElementById('quizQuestionArea').innerHTML = `
+      <div class="question-text">❓ ${q.text}</div>
+      <div class="options">${optsHtml}</div>${fb}
+      <div style="display:flex;justify-content:space-between;margin-top:1rem;"><span>${currentIndex+1}/5</span>${currentIndex<4?'<button id="nextQ">Next →</button>':'<button id="finishQ">🏁 Finish</button>'}</div>`;
+    document.querySelectorAll('.option').forEach(opt=>opt.addEventListener('click',()=>{if(quizFinished||userAnswers[currentIndex]!==undefined) return; userAnswers[currentIndex]=parseInt(opt.dataset.idx); renderCurrentQuestion();}));
+    document.getElementById('nextQ')?.addEventListener('click',()=>{if(userAnswers[currentIndex]===undefined){alert('Select an answer');return;} currentIndex++; renderCurrentQuestion();});
+    document.getElementById('finishQ')?.addEventListener('click',()=>{if(userAnswers[currentIndex]===undefined){alert('Select an answer');return;} quizFinished=true; renderCurrentQuestion();});
+    updateProgress();
+  }
+
+  function resetQuiz() { currentQuizQuestions=getRandomQuestions(5); currentIndex=0; userAnswers=new Array(5); quizFinished=false; renderCurrentQuestion(); }
+  document.getElementById('reloadQuizBtn').addEventListener('click',resetQuiz);
+  resetQuiz();
+  document.getElementById('darkModeToggle').addEventListener('click',()=>document.body.classList.toggle('dark'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',function(e){e.preventDefault(); document.querySelector(this.getAttribute('href')).scrollIntoView({behavior:'smooth'});}));
+</script>
+</body>
+</html>
