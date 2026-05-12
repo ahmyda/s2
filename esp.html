@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ESP Course Design , Good luck y'all ❤️</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #e0eafc 0%, #cfdef3 100%);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    /* main container */
+    .quiz-container {
+      max-width: 780px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* cards */
+    .card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(0px);
+      border-radius: 2.5rem;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    .card-inner {
+      padding: 2rem 1.8rem;
+    }
+
+    /* start screen */
+    .start-screen {
+      text-align: center;
+    }
+
+    .start-screen h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #1E3C72, #2A5298);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      background: #eef2ff;
+      color: #1e40af;
+      padding: 0.35rem 1rem;
+      border-radius: 40px;
+      display: inline-block;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .desc {
+      color: #2c3e66;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    /* buttons primary */
+    .btn-primary {
+      background: #2c3e66;
+      color: white;
+      border: none;
+      padding: 0.9rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      width: auto;
+      min-width: 180px;
+    }
+
+    .btn-primary:hover {
+      background: #1e2c4a;
+      transform: scale(0.97);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* progress bar */
+    .progress-area {
+      margin-bottom: 1.8rem;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #2c3e66;
+      margin-bottom: 8px;
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 20px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: #2c3e66;
+      width: 0%;
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.3s ease;
+    }
+
+    /* question card */
+    .question-text {
+      font-size: 1.7rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 2rem;
+      color: #0f172a;
+    }
+
+    /* true/false buttons */
+    .tf-buttons {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      margin: 1.5rem 0 1.8rem;
+      flex-wrap: wrap;
+    }
+    .tf-btn {
+      flex: 1;
+      min-width: 130px;
+      padding: 1rem 0;
+      border: none;
+      border-radius: 80px;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #f1f5f9;
+      color: #1e293b;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .tf-btn.true {
+      border-left: 4px solid #2e7d32;
+    }
+    .tf-btn.false {
+      border-left: 4px solid #c62828;
+    }
+    .tf-btn:hover:not(:disabled) {
+      transform: translateY(-3px);
+      background: #e6edf5;
+    }
+    .tf-btn:active {
+      transform: translateY(1px);
+    }
+    .tf-btn.disabled-btn, .tf-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* feedback */
+    .feedback-card {
+      background: #f8fafc;
+      border-radius: 1.5rem;
+      padding: 1rem 1.3rem;
+      margin-top: 0.5rem;
+      border-left: 5px solid #cbd5e1;
+      transition: 0.2s;
+    }
+    .feedback-correct {
+      border-left-color: #2e7d32;
+      background: #e9f7eb;
+    }
+    .feedback-wrong {
+      border-left-color: #c62828;
+      background: #ffeaea;
+    }
+    .feedback-text {
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .explanation {
+      font-size: 0.9rem;
+      color: #2d3a5e;
+      margin-top: 8px;
+      border-top: 1px dashed #d1dbe8;
+      padding-top: 8px;
+    }
+    .next-btn {
+      margin-top: 1.5rem;
+      background: #2c3e66;
+      width: 100%;
+      padding: 0.9rem;
+      font-size: 1rem;
+      border-radius: 60px;
+      font-weight: 600;
+    }
+    .next-btn:disabled {
+      background: #a0afc3;
+      cursor: default;
+    }
+
+    /* results screen */
+    .result-summary {
+      text-align: center;
+    }
+    .score-circle {
+      background: #eef2ff;
+      border-radius: 100px;
+      width: 130px;
+      height: 130px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      box-shadow: inset 0 0 0 2px white, 0 6px 12px rgba(0,0,0,0.05);
+    }
+    .score-number {
+      font-size: 3.1rem;
+      font-weight: 800;
+      color: #1e3c72;
+    }
+    .review-list {
+      text-align: left;
+      background: #f1f5f9;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      max-height: 280px;
+      overflow-y: auto;
+      margin: 1.5rem 0;
+    }
+    .review-item {
+      padding: 0.7rem;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.9rem;
+    }
+    .review-correct {
+      color: #15803d;
+      font-weight: bold;
+    }
+    .review-wrong {
+      color: #b91c1c;
+      font-weight: bold;
+    }
+
+    @media (max-width: 550px) {
+      .card-inner {
+        padding: 1.5rem;
+      }
+      .question-text {
+        font-size: 1.35rem;
+      }
+      .tf-btn {
+        min-width: 110px;
+        padding: 0.75rem 0;
+        font-size: 1.2rem;
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+    .animate-pop {
+      animation: fadeSlide 0.3s ease-out;
+    }
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .vibrate-short {
+      animation: subtleShake 0.2s ease-in-out 0s 1;
+    }
+    @keyframes subtleShake {
+      0% { transform: translateX(0px); }
+      25% { transform: translateX(3px); }
+      75% { transform: translateX(-3px); }
+      100% { transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+<div class="quiz-container" id="appRoot"></div>
+
+<script>
+  // --------------------------------------------------------------
+  // 50 TRUE/FALSE QUESTIONS derived from the provided PDF (Graves model, ESP concepts)
+  // Each obj: { text: "statement", answer: true/false, explanation: "short quote from content" }
+  // --------------------------------------------------------------
+  const questionBank = [
+    { text: "Graves' model consists of six steps: needs assessment, goals/objectives, conceptualizing content, selecting materials, organizing content, and evaluation.", answer: true, explanation: "Graves (1996, 2000) proposed a flexible six-step framework for ESP course design." },
+    { text: "In Graves' model, the steps must always follow a strict linear order starting with needs analysis.", answer: false, explanation: "Graves emphasizes that steps are non-hierarchical; designers may begin at any stage." },
+    { text: "Needs analysis in ESP only focuses on identifying learners' language deficits.", answer: false, explanation: "Needs analysis goes beyond deficits to include real-world tasks, target requirements, and contextual constraints." },
+    { text: "Stakeholder involvement includes learners, teachers, employers, and course sponsors to ensure relevant ESP courses.", answer: true, explanation: "Stakeholders like employers and colleagues help make needs analysis learner-centered and context-sensitive." },
+    { text: "Goals in ESP course design are measurable, actionable steps that break down broad intentions.", answer: false, explanation: "Goals are broad long-term intentions; objectives are measurable actionable steps." },
+    { text: "Authentic materials in ESP should be drawn from real-world contexts like technical manuals and business emails.", answer: true, explanation: "Materials should be authentic, relevant, and adaptable, drawn from real-world contexts." },
+    { text: "Formative evaluation in ESP refers only to final exams at the end of the course.", answer: false, explanation: "Formative evaluation is ongoing assessment to guide instruction; summative is final." },
+    { text: "Task-Based Language Teaching (TBLT) organizes lessons around meaningful tasks reflecting real-world requirements.", answer: true, explanation: "TBLT organizes lessons around meaningful tasks that reflect real-world requirements." },
+    { text: "Content-Based Instruction (CBI) integrates subject matter with language instruction.", answer: true, explanation: "CBI integrates subject matter with language instruction, as mentioned in sequencing approaches." },
+    { text: "The recycling principle in sequencing means content is never revisited once taught.", answer: false, explanation: "Recycling revisits previous content in new contexts to reinforce retention." },
+    { text: "ESP course design is a static, one-time process with no need for later adjustment.", answer: false, explanation: "ESP course development is dynamic and requires constant adaptation to changing learner profiles." },
+    { text: "Graves states that teaching is 'an organic, unpredictable, challenging, satisfying and frustrating process'.", answer: true, explanation: "Graves (2000) notes that teaching is dynamic and unpredictable." },
+    { text: "The communicative approach in ESP emphasizes meaningful interaction in authentic contexts.", answer: true, explanation: "Communicative approach emphasizes meaningful interaction in authentic contexts." },
+    { text: "Discourse competence refers to understanding how texts are organized including genre conventions.", answer: true, explanation: "Discourse competence involves understanding text organization and genre conventions." },
+    { text: "In nursing ESP, an objective could be explaining medical procedures empathetically in role-plays.", answer: true, explanation: "Example: nursing students explain medical procedures clearly and empathetically." },
+    { text: "Needs analysis methods exclude authentic text analysis and focus solely on questionnaires.", answer: false, explanation: "Methods include surveys, interviews, observations, analysis of authentic texts." },
+    { text: "Graves' model was designed exclusively for general English, not ESP.", answer: false, explanation: "Graves' framework is a flexible framework for ESP course development." },
+    { text: "A thorough needs analysis examines learners' current abilities, target requirements, and contextual constraints.", answer: true, explanation: "Three key dimensions: learners' current abilities, target language requirements, and contextual constraints." },
+    { text: "Simulations and role-plays are not recommended for ESP because they are not realistic.", answer: false, explanation: "Simulations and role-play are encouraged to practice client meetings, patient consultations." },
+    { text: "Project-based assignments such as reports or portfolios help learners apply language meaningfully.", answer: true, explanation: "Project-based assignments produce reports, presentations, portfolios for authentic audiences." },
+    { text: "In ESP, sequencing decisions ignore difficulty and only follow thematic order.", answer: false, explanation: "Sequencing considers difficulty, chronology, prerequisites, and recycling." },
+    { text: "Course evaluation in ESP examines whether goals and objectives are achieved and incorporates feedback.", answer: true, explanation: "Course evaluation examines goal achievement using questionnaires, interviews, performance analysis." },
+    { text: "Learner assessment includes both formative and summative evaluation procedures.", answer: true, explanation: "Learner assessment involves formative (ongoing) and summative (final) evaluation." },
+    { text: "Authentic materials must never be adapted because that would lose authenticity.", answer: false, explanation: "Materials should be adaptable for varying proficiency levels and learning styles." },
+    { text: "The ESP content conceptualization may include grammatical, functional, and discourse competence.", answer: true, explanation: "Key components: grammatical, functional, discourse, and vocational components." },
+    { text: "Needs analysis is widely recognized as the cornerstone of effective ESP course design.", answer: true, explanation: "Needs analysis is the cornerstone of effective ESP course design." },
+    { text: "In ESP, goals help guide material selection and instructional planning but not assessment.", answer: false, explanation: "Clear goals guide material selection, instructional planning, and assessment design." },
+    { text: "Contextual constraints in needs analysis refer only to classroom furniture and ignore institutional expectations.", answer: false, explanation: "Contextual constraints include institutional expectations, resources, class size, time, and technology." },
+    { text: "Teachers can begin Graves' curriculum design process at any stage depending on context.", answer: true, explanation: "Course designers may begin at any stage depending on context, learner profile." },
+    { text: "Four-skill proficiency design integrates listening, speaking, reading, and writing for balanced competence.", answer: true, explanation: "Four-skill proficiency design ensures balanced competence across skills." },
+    { text: "In ESP for tourism, reading authentic travel brochures is an example of reading competence.", answer: true, explanation: "Reading authentic travel brochures develops reading competence in tourism ESP." },
+    { text: "Summative evaluation occurs during the course to provide ongoing feedback to learners.", answer: false, explanation: "Summative evaluation measures achievement at the end of the course." },
+    { text: "According to Graves (2000), course development involves planning, teaching, and continuous modification during and after delivery.", answer: true, explanation: "Course design involves planning, teaching, and continuous modification, both during and after delivery." },
+    { text: "ESP practitioners must be innovative and flexible, anticipating changes in learner needs.", answer: true, explanation: "ESP teachers must be innovative, flexible, anticipate change and respond proactively." },
+    { text: "The main purpose of recycling in ESP is to make the course longer without benefits.", answer: false, explanation: "Recycling revisits previous content in new contexts to reinforce retention." },
+    { text: "Functional competence includes performing real-life functions like writing reports or participating in meetings.", answer: true, explanation: "Functional competence is ability to perform real-life communicative functions." },
+    { text: "Graves' model includes only needs analysis, teaching, and evaluation, ignoring content conceptualization.", answer: false, explanation: "Full model includes needs analysis, goals, content conceptualization, materials, organization, evaluation." },
+    { text: "ESP courses must be aligned with learners' academic or professional contexts to be effective.", answer: true, explanation: "Aligning with academic or professional contexts ensures learners acquire real-world communication skills." },
+    { text: "Activities in ESP should be abstract and grammar-focused rather than replicating communication scenarios.", answer: false, explanation: "Activities should engage learners actively and replicate real-world communication scenarios." },
+    { text: "ESP course designers should adapt materials to match varying proficiency levels and learning styles.", answer: true, explanation: "Materials should be adaptable for varying proficiency levels, learning styles, and interests." },
+    { text: "The syllabus grid based on Graves includes culture, tasks, grammar, pronunciation and vocabulary.", answer: true, explanation: "Table 1 in PDF shows Content, Culture, Tasks, Grammar, Pronunciation, Vocabulary, etc." },
+    { text: "Stakeholder involvement helps negotiate realistic course outcomes and build long-term engagement.", answer: true, explanation: "Stakeholders help negotiate realistic outcomes and foster long-term engagement." },
+    { text: "Graves discourages the use of cyclical or matrix models, preferring only linear progression.", answer: false, explanation: "Courses may adopt cyclical or matrix models which provide flexible pathways." },
+    { text: "Problem-solving tasks such as analyzing case studies are effective ESP activities.", answer: true, explanation: "Problem-solving tasks: analyzing case studies or troubleshooting technical processes." },
+    { text: "The evaluation step in Graves' model does not include course evaluation, only learner assessment.", answer: false, explanation: "Evaluation includes both learner assessment and course evaluation." },
+    { text: "Needs analysis builds buy-in from stakeholders and ensures course relevance.", answer: true, explanation: "Needs analysis builds buy-in, helps allocate resources efficiently, fosters engagement." },
+    { text: "In ESP content conceptualization, vocational components refer to specialized terminology and formats.", answer: true, explanation: "Vocational/academic components: specialized terminology, formats, conventions from learners' field." },
+    { text: "Graves states that classroom events often unfold predictably, so objectives need no adjustment.", answer: false, explanation: "Classroom events often unfold unpredictably, requiring instructors to adjust course objectives." },
+    { text: "ESP course design draws on Brown's three-step model and Graves' framework.", answer: true, explanation: "Introduction states: drawing on Brown's three-step model and Graves' framework for ESP design." },
+    { text: "Authentic tasks enhance learner motivation and ensure language application in contextually meaningful ways.", answer: true, explanation: "Authentic tasks enhance motivation and relevance, applying language meaningfully." }
+  ];
+  // ensure exactly 50 questions (bank length 50)
+  console.assert(questionBank.length === 50, "Question bank must have 50 items");
+
+  // ---------- App State ----------
+  let currentSessionQuestions = [];    // array of 5 question objects (original indices or obj)
+  let currentQuestionIndex = 0;
+  let userAnswers = [];                // array of { selected: bool, isCorrect: bool, explanation: string, questionText: string, correctAnswer: bool }
+  let answered = false;               // lock after answering one question
+  let quizActive = false;             // whether quiz in progress (not start/results)
+  
+  // DOM elements
+  const appRoot = document.getElementById("appRoot");
+  
+  // Helper: pick 5 unique random questions from full bank (no repeat in a round)
+  function getRandomQuestionsSet() {
+    const shuffledFull = [...questionBank];
+    for (let i = shuffledFull.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledFull[i], shuffledFull[j]] = [shuffledFull[j], shuffledFull[i]];
+    }
+    return shuffledFull.slice(0, 5);
+  }
+  
+  // UI Render functions (state machine)
+  function renderStartScreen() {
+    appRoot.innerHTML = `
+      <div class="card start-screen animate-pop">
+        <div class="card-inner">
+          <span class="badge">🎓 ESP Practitioner Toolkit</span>
+          <h1>📘 Course Design Mastery</h1>
+          <p class="desc">Test your knowledge on Graves' model, needs analysis, authentic materials, and ESP evaluation. <br><strong>5 random True/False questions per round.</strong> Get instant explanations!</p>
+          <button class="btn-primary" id="startQuizBtn">🚀 Start New Quiz</button>
+          <div style="margin-top: 1.5rem; font-size: 0.8rem; color: #4a5b7a;">Based on Graves (1996, 2000) & ESP frameworks</div>
+        </div>
+      </div>
+    `;
+    const startBtn = document.getElementById("startQuizBtn");
+    if (startBtn) startBtn.addEventListener("click", () => initNewRound());
+  }
+  
+  function initNewRound() {
+    // select fresh random 5 questions
+    currentSessionQuestions = getRandomQuestionsSet();
+    currentQuestionIndex = 0;
+    userAnswers = [];
+    answered = false;
+    quizActive = true;
+    renderQuizQuestion();
+  }
+  
+  function renderQuizQuestion() {
+    if (!quizActive || currentQuestionIndex >= currentSessionQuestions.length) {
+      // finished quiz
+      showResultsScreen();
+      return;
+    }
+    const qData = currentSessionQuestions[currentQuestionIndex];
+    const progressPercent = ((currentQuestionIndex) / currentSessionQuestions.length) * 100;
+    const qNumber = currentQuestionIndex + 1;
+    const total = currentSessionQuestions.length;
+    
+    const html = `
+      <div class="card animate-pop" id="quizCard">
+        <div class="card-inner">
+          <div class="progress-area">
+            <div class="progress-info">
+              <span>📋 Question ${qNumber} of ${total}</span>
+              <span>⭐ ESP Challenge</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-fill" style="width: ${progressPercent}%;"></div>
+            </div>
+          </div>
+          <div class="question-text">${escapeHtml(qData.text)}</div>
+          <div class="tf-buttons">
+            <button class="tf-btn true" id="trueBtn">✅ TRUE</button>
+            <button class="tf-btn false" id="falseBtn">❌ FALSE</button>
+          </div>
+          <div id="feedbackArea"></div>
+          <button class="btn-primary next-btn" id="nextBtn" disabled>➡ Next Question</button>
+        </div>
+      </div>
+    `;
+    appRoot.innerHTML = html;
+    
+    const trueBtn = document.getElementById("trueBtn");
+    const falseBtn = document.getElementById("falseBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    
+    const handleAnswer = (selectedBoolean) => {
+      if (answered) return;
+      answered = true;
+      const isCorrect = (selectedBoolean === qData.answer);
+      // store answer
+      userAnswers.push({
+        questionText: qData.text,
+        selected: selectedBoolean,
+        isCorrect: isCorrect,
+        correctAnswer: qData.answer,
+        explanation: qData.explanation
+      });
+      // show feedback card
+      const feedbackDiv = document.getElementById("feedbackArea");
+      const correctBadge = isCorrect ? "✅ Correct!" : "❌ Incorrect";
+      const feedbackClass = isCorrect ? "feedback-correct" : "feedback-wrong";
+      // Add subtle visual indicator (background flash)
+      const quizCardDiv = document.getElementById("quizCard");
+      if (quizCardDiv) {
+        quizCardDiv.classList.add("vibrate-short");
+        setTimeout(() => quizCardDiv.classList.remove("vibrate-short"), 300);
+      }
+      // simple 'pop' sound alternative (web audio beep using oscillator? but better use visual only, but we implement simple beep using Web Audio for fun, but optional)
+      // add subtle beep if supported, but not mandatory, but we produce a 'click' like indicator? keep visual clear.
+      // add simple tone? we can play very short beep using AudioContext? too heavy? but we just add nice visual flash on buttons.
+      trueBtn.style.transform = "scale(0.98)";
+      falseBtn.style.transform = "scale(0.98)";
+      setTimeout(() => { if(trueBtn) trueBtn.style.transform = ""; if(falseBtn) falseBtn.style.transform = ""; }, 150);
+      
+      feedbackDiv.innerHTML = `
+        <div class="feedback-card ${feedbackClass}">
+          <div class="feedback-text"><span>${correctBadge}</span></div>
+          <div class="explanation">📖 ${escapeHtml(qData.explanation)}</div>
+        </div>
+      `;
+      // disable true/false buttons
+      trueBtn.disabled = true;
+      falseBtn.disabled = true;
+      trueBtn.classList.add("disabled-btn");
+      falseBtn.classList.add("disabled-btn");
+      // enable next button
+      nextBtn.disabled = false;
+    };
+    
+    trueBtn.addEventListener("click", () => handleAnswer(true));
+    falseBtn.addEventListener("click", () => handleAnswer(false));
+    
+    nextBtn.addEventListener("click", () => {
+      if (nextBtn.disabled) return;
+      // move to next question
+      currentQuestionIndex++;
+      answered = false;
+      if (currentQuestionIndex < currentSessionQuestions.length) {
+        renderQuizQuestion();
+      } else {
+        // all answered -> results
+        quizActive = false;
+        showResultsScreen();
+      }
+    });
+  }
+  
+  function showResultsScreen() {
+    const total = userAnswers.length;
+    const correctCount = userAnswers.filter(a => a.isCorrect).length;
+    const scorePercent = Math.round((correctCount/total)*100);
+    
+    let reviewHtml = `<div class="review-list"><h4 style="margin-bottom: 12px;">📋 Answer Review</h4>`;
+    userAnswers.forEach((ans, idx) => {
+      const statusIcon = ans.isCorrect ? "✅" : "❌";
+      const correctAnswerText = ans.correctAnswer ? "True" : "False";
+      const userChoiceText = ans.selected ? "True" : "False";
+      const correctnessClass = ans.isCorrect ? "review-correct" : "review-wrong";
+      reviewHtml += `
+        <div class="review-item">
+          <div><strong>${idx+1}.</strong> ${escapeHtml(ans.questionText)}</div>
+          <div>🧠 Your answer: <span class="${correctnessClass}">${userChoiceText}</span> | ✔️ Correct: ${correctAnswerText}</div>
+          <div style="font-size: 0.75rem; color:#475569;">💡 ${escapeHtml(ans.explanation)}</div>
+        </div>
+      `;
+    });
+    reviewHtml += `</div>`;
+    
+    const resultsHtml = `
+      <div class="card animate-pop">
+        <div class="card-inner result-summary">
+          <div class="score-circle">
+            <div class="score-number">${correctCount}/${total}</div>
+            <div style="font-weight:500;">Score</div>
+          </div>
+          <h3>✨ Quiz completed! ✨</h3>
+          <p style="margin-bottom:1rem;">You got ${correctCount} out of ${total} correct (${scorePercent}%)</p>
+          ${reviewHtml}
+          <button class="btn-primary" id="restartBtn">🔄 Restart / New Random Set</button>
+        </div>
+      </div>
+    `;
+    appRoot.innerHTML = resultsHtml;
+    const restart = document.getElementById("restartBtn");
+    if (restart) restart.addEventListener("click", () => {
+      initNewRound(); 
+    });
+  }
+  
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+      return c;
+    });
+  }
+  
+  // initial render
+  renderStartScreen();
+</script>
+</body>
+</html>
