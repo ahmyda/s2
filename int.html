@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Interculturality Hub: Paragraph Answers + Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef3f7;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.5;
+            padding: 35px 24px;
+            color: #1a3a47;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* section titles */
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 35px 0 20px 0;
+            padding-left: 12px;
+            border-left: 7px solid #226688;
+            color: #1a4b63;
+        }
+
+        .section-sub {
+            font-size: 1rem;
+            color: #2c6e8f;
+            margin-top: -12px;
+            margin-bottom: 25px;
+            padding-left: 18px;
+        }
+
+        /* lecture cards grid */
+        .lecture-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.05);
+            flex: 1 1 280px;
+            transition: transform 0.2s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 18px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: #226688;
+            color: white;
+            padding: 18px 20px;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .summary {
+            background: #f0f8fe;
+            padding: 12px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 18px;
+            border-left: 4px solid #7fcdff;
+        }
+
+        /* paragraph style answer area inside each card */
+        .qa-paragraphs {
+            margin-top: 12px;
+        }
+
+        .qa-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e1ecf2;
+            padding-bottom: 12px;
+        }
+
+        .qa-question {
+            font-weight: 700;
+            color: #1d5a7a;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        .qa-answer {
+            font-size: 0.85rem;
+            color: #2c5a6e;
+            background: #fefef7;
+            padding: 8px 12px;
+            border-radius: 16px;
+            line-height: 1.45;
+        }
+
+        /* separate Q&A bank section (full list) */
+        .bank-section {
+            background: #ffffffdd;
+            background: white;
+            border-radius: 38px;
+            padding: 25px 30px;
+            margin: 40px 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .bank-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .bank-card {
+            background: #fafeff;
+            border-radius: 24px;
+            padding: 16px;
+            border: 1px solid #cee5f0;
+        }
+
+        .bank-q {
+            font-weight: 700;
+            color: #1b5d7a;
+        }
+
+        .bank-a {
+            margin-top: 8px;
+            color: #2d6a4f;
+            font-style: normal;
+            background: #eef6ea;
+            padding: 8px 12px;
+            border-radius: 18px;
+            font-size: 0.85rem;
+        }
+
+        /* quiz section */
+        .quiz-section {
+            background: white;
+            border-radius: 40px;
+            padding: 28px 32px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #cbe2ec;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        .quiz-header h2 {
+            color: #1b698b;
+        }
+
+        .quiz-status {
+            background: #e2f0f5;
+            padding: 5px 16px;
+            border-radius: 60px;
+            font-size: 0.85rem;
+        }
+
+        .quiz-question {
+            background: #fbfeff;
+            border-radius: 28px;
+            padding: 18px;
+            margin-bottom: 28px;
+            border: 1px solid #d6e9f2;
+        }
+
+        .question-text {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 14px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f6fafd;
+            padding: 8px 14px;
+            border-radius: 60px;
+            cursor: pointer;
+            border: 1px solid #cde3ed;
+        }
+
+        .option:hover {
+            background: #e6f1f7;
+        }
+
+        input[type="radio"] {
+            accent-color: #226688;
+        }
+
+        .feedback {
+            margin-top: 12px;
+            padding: 8px 15px;
+            border-radius: 24px;
+            font-size: 0.85rem;
+        }
+
+        .feedback.correct {
+            background: #e0f2e6;
+            color: #1e6b3e;
+            border-left: 4px solid #2c9c5c;
+        }
+
+        .feedback.wrong {
+            background: #ffe8e7;
+            color: #b13e3e;
+            border-left: 4px solid #e15554;
+        }
+
+        .quiz-buttons {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background: #226688;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 44px;
+            font-weight: 600;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #0e506e;
+            transform: scale(0.97);
+        }
+
+        .reset-btn {
+            background: #4f7e94;
+        }
+
+        .result-area {
+            background: #ddeef5;
+            border-radius: 30px;
+            text-align: center;
+            padding: 18px;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+
+        hr {
+            margin: 20px 0;
+        }
+
+        @media (max-width: 750px) {
+            body {
+                padding: 20px 16px;
+            }
+            .bank-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- SECTION 1: LECTURES + PARAGRAPH ANSWERS (10 per lecture, inline) -->
+    <div class="section-title">📖 1. Lecture Summaries & Paragraph‑Style Answers</div>
+    <div class="section-sub">Each lecture includes a brief summary + 10 questions answered in short paragraph form.</div>
+    <div class="lecture-grid" id="lecturesGrid"></div>
+
+    <!-- SECTION 2: COMPLETE Q&A BANK (all 40 questions with paragraph answers) -->
+    <div class="section-title">📚 2. Complete Q&A Bank (40 questions)</div>
+    <div class="section-sub">All questions from cinema, immigration, religion, AI — each answered in a concise paragraph.</div>
+    <div class="bank-section" id="qaBankContainer"></div>
+
+    <!-- SECTION 3: RANDOM QUIZ (5 out of 40) -->
+    <div class="section-title">🎯 3. Interactive Quiz (random 5 questions)</div>
+    <div class="section-sub">Test yourself — new random set each time, with instant feedback and final score.</div>
+    <div class="quiz-section" id="quizApp">
+        <div class="quiz-header">
+            <h2>✨ Intercultural Quiz</h2>
+            <div class="quiz-status" id="quizCounter">5 random questions</div>
+        </div>
+        <div id="quizContainer"></div>
+        <div class="quiz-buttons">
+            <button id="submitQuizBtn">📌 Submit answers</button>
+            <button id="newQuizBtn" class="reset-btn">🔄 New random set</button>
+        </div>
+        <div id="quizResultArea" class="result-area" style="display: none;"></div>
+    </div>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // MASTER BANK (40 items) with question, options, correct index, and paragraph answer
+    // --------------------------------------------------------------
+    const masterBank = [];
+
+    function addEntry(lecture, text, options, correctIdx, paragraphAnswer) {
+        masterBank.push({ lecture, text, options, correctIdx, paragraphAnswer });
+    }
+
+    // CINEMA (10)
+    addEntry("cinema", "According to Said's Orientalism, how are non-Western societies often depicted in Western cinema?", ["As modern and progressive", "As exotic, inferior or mysterious", "As identical to Western societies", "As superior to the West"], 1, "Said's Orientalism explains that Western cinema frequently constructs non-Western societies as exotic, backward, or mysterious. This reinforces a binary opposition between the 'West' and the 'Other', shaping biased audience perceptions.");
+    addEntry("cinema", "What is the main difference between 'insider representation' and 'outsider representation' in film?", ["Insider focuses on special effects", "Insider offers nuanced authentic portrayals; outsider may exoticize", "Outsider always shows more realism", "No difference at all"], 1, "Insider representation emerges from within a culture and tends to show nuanced, authentic realities. Outsider representation often simplifies or exoticizes, missing internal diversity and reinforcing stereotypes.");
+    addEntry("cinema", "Which film is mentioned as portraying Middle Eastern characters in a one-dimensional negative way?", ["The Namesake", "Aladdin", "American Sniper", "Lost in Translation"], 2, "American Sniper (2014) has been criticized for depicting Middle Eastern characters largely as negative and one-dimensional, which fuels cultural misunderstandings and prejudice.");
+    addEntry("cinema", "How do streaming algorithms affect intercultural learning according to Noble (2018)?", ["They promote random global content", "They create 'cultural bubbles' limiting diverse exposure", "They eliminate all biases", "They focus on documentaries only"], 1, "Noble argues that algorithmic bias creates 'cultural bubbles', repeatedly recommending similar content and reducing exposure to diverse cultures, which hinders genuine intercultural learning.");
+    addEntry("cinema", "What role does language play in films like 'Inglourious Basterds'?", ["Only for comedy", "It functions as a tool of power and survival", "No significance", "Musical expression"], 1, "In Inglourious Basterds, language determines survival and control, illustrating how linguistic competence is tied to power, identity, and authority in intercultural encounters.");
+    addEntry("cinema", "What concept from Hall (1997) explains that representation is linked to control and meaning?", ["Third Space", "Site of power", "Cultural hybridity", "Assimilation"], 1, "Hall describes representation as a 'site of power' where meanings are produced, controlled, and contested. Cinema becomes a battlefield of ideologies, shaping cultural narratives.");
+    addEntry("cinema", "Which film illustrates intercultural miscommunication and isolation due to language barriers?", ["The Office", "Lost in Translation", "Aladdin", "The Namesake"], 1, "Lost in Translation shows characters struggling with linguistic and cultural barriers, leading to isolation and confusion, highlighting the need for intercultural competence.");
+    addEntry("cinema", "Why should students critically analyze cinematic representations?", ["To memorize plots", "To question perspective, bias, missing narratives", "To avoid watching films", "Only for grades"], 1, "Critical analysis helps students uncover whose perspective is shown, what is omitted, and how power shapes representation, moving from passive consumption to active interpretation.");
+    addEntry("cinema", "What does the term 'Orientalism' describe?", ["Respect for Eastern art", "Western stereotype construction of the 'Other' as backward/mysterious", "Economic trade routes", "Modern Asian cinema"], 1, "Orientalism, coined by Edward Said, describes how Western representations construct the 'Orient' as inferior, exotic, and mysterious, serving colonial and dominant ideologies.");
+    addEntry("cinema", "Which aspect does colonial narrative in cinema often reinforce?", ["Equality between colonizer/colonized", "Colonized as primitive needing Western intervention", "Postcolonial harmony", "Indigenous technology"], 1, "Colonial narratives portray colonized peoples as primitive or passive, reinforcing the 'civilizing mission' myth and legitimizing Western dominance even in modern films.");
+
+    // IMMIGRATION (10)
+    addEntry("immigration", "According to Edward Said, the exile is:", ["Fully at home in host country", "Never quite at home in either old or new land", "Always forgets origin", "Assimilated completely"], 1, "Said states that the exile belongs to both worlds yet is never fully at home in either, experiencing a perpetual state of betweenness and irreconcilable memory.");
+    addEntry("immigration", "What does Homi Bhabha's 'Third Space' represent?", ["A physical country", "Hybrid identities from cultural interaction, new meanings", "Assimilation only", "Monocultural purity"], 1, "Bhabha's Third Space is a metaphorical zone where cultural interaction creates hybrid identities and new meanings, destabilizing fixed notions of purity and origin.");
+    addEntry("immigration", "How does interculturality differ from integration?", ["Integration implies mutual transformation", "Interculturality means one-way assimilation", "Interculturality = mutual transformation, integration = immigrant adapts to host", "Both mean same"], 2, "Integration expects immigrants to adapt to the host society linearly, while interculturality involves mutual transformation and co-construction of meaning among all groups.");
+    addEntry("immigration", "In 'The Namesake' (Lahiri), the protagonist's experience reflects:", ["Complete assimilation", "Split cultural belonging, hybrid identity", "Rejection of heritage", "No identity conflict"], 1, "The Namesake shows the protagonist navigating Indian heritage and American upbringing, embodying a hybrid, split sense of belonging typical of second-generation immigrants.");
+    addEntry("immigration", "Which quote describes Jamilah's struggle to fit in as an Australian teen?", ["Ten Things I Hate About Me", "The Black Atlantic", "Orientalism", "Algorithms of Oppression"], 0, "In Randa Abdelfattah's novel, Jamilah hides her Lebanese heritage by anglicizing her name and dyeing her hair, reflecting the painful performance of fitting in.");
+    addEntry("immigration", "Paul Gilroy's 'routes not roots' emphasizes:", ["Static identity", "Movement, mixtures, intersections of culture", "Returning to homeland", "Only local traditions"], 1, "Gilroy argues that diasporic identity is shaped by movement, routes, and cultural mixtures rather than fixed territorial roots, celebrating fluidity.");
+    addEntry("immigration", "Stuart Hall argues identity is:", ["Fixed essence", "Production always in process, historical context", "Genetic only", "Irrelevant to culture"], 1, "Hall sees identity as a continuous production shaped by history, culture, and power, never a finished essence but always becoming.");
+    addEntry("immigration", "What does 'third space' enable according to Bhabha?", ["Cultural hierarchy", "Creative negotiation, destabilizes cultural purity", "Elimination of differences", "Segregation"], 1, "Third space enables creative negotiation, allowing new identities to emerge beyond binary oppositions and challenging cultural essentialism.");
+    addEntry("immigration", "Which author wrote 'Here's to the security guards who maybe had a degree in another land'?", ["Jhumpa Lahiri", "Randa Abdelfattah", "Jieoma Umebinyuo", "Stuart Hall"], 2, "Jieoma Umebinyuo's poem honors immigrant workers who left behind degrees and dreams, celebrating resilience and transnational love.");
+    addEntry("immigration", "Integration models often measure:", ["Cultural co-construction", "Structural/economic participation in host society", "Third Space creation", "Religious conversion"], 1, "Integration typically assesses structural indicators like employment, education, and social participation, rather than mutual cultural transformation.");
+
+    // RELIGION (10)
+    addEntry("religion", "According to Hall & Samovar, religion functions as what within culture?", ["Superficial ritual", "Deep structure guiding meaning-making", "Political tool only", "Entertainment"], 1, "Religion operates as a deep cultural structure that shapes worldviews, morality, authority, and communication norms, guiding everyday meaning-making.");
+    addEntry("religion", "Which communication style can be influenced by religious traditions?", ["Only verbal accent", "Politeness norms, indirectness, non-verbal cues", "Grammar rules", "Spelling"], 1, "Religious traditions impact politeness, emotional expression, silence, gestures, and attitudes toward hierarchy, which can cause intercultural misunderstanding.");
+    addEntry("religion", "How can religious identity affect intercultural misunderstandings?", ["No effect", "Ignored beliefs lead to defensive communication", "Always positive", "Only in churches"], 1, "When religious identity is ignored or mocked, individuals feel marginalized, leading to defensive or withdrawn communication, escalating misunderstandings.");
+    addEntry("religion", "Teachers should respond to religious diversity by:", ["Ignoring religious holidays", "Awareness of dress codes, prayers, inclusive environment", "Forcing secularism only", "Banning all symbols"], 1, "Educators need proactive awareness of religious holidays, dress, dietary rules, and prayer needs to create inclusive classrooms that respect diversity.");
+    addEntry("religion", "Media representations of religion often:", ["Promote deep theology", "Reinforce stereotypes and oversimplifications", "Encourage interfaith dialogue automatically", "Neutral and balanced"], 1, "Media often reduces complex religious traditions to stereotypes or extremism, shaping public perception and hindering genuine intercultural dialogue.");
+    addEntry("religion", "Interfaith communication encourages:", ["Competition", "Empathy, active listening, ethical engagement", "Conversion attempts", "Avoiding contact"], 1, "Interfaith dialogue promotes empathetic listening, ethical engagement, and curiosity, transforming potential conflict into mutual understanding.");
+    addEntry("religion", "Why can religious conflict be especially sensitive?", ["Because religion is superficial", "Tied to identity, history, power, belonging", "No emotional charge", "Only political"], 1, "Religious identity intersects with personal history, community belonging, and power structures, making conflicts deeply emotional and polarizing.");
+    addEntry("religion", "Gudykunst & Kim argue effective intercultural dialogue requires:", ["Ignoring anxiety", "Managing anxiety and uncertainty", "Aggressive arguments", "Avoiding religion"], 1, "Managing anxiety and uncertainty is crucial when discussing religion, as unfamiliar beliefs can trigger defensive reactions; structured dialogue reduces threat.");
+    addEntry("religion", "What is a practical example of religious accommodation at work?", ["Allowing flexible breaks for prayers", "Mandatory Christian events", "Ignoring dietary needs", "No accommodation"], 0, "Workplaces can offer prayer breaks, respect dietary halal/kosher rules, and accommodate religious holidays, fostering inclusion and respect.");
+    addEntry("religion", "Which theorist emphasized identity negotiation in communication related to religion?", ["Ting-Toomey & Dorjee", "Said only", "Noble", "Bender"], 0, "Ting-Toomey and Dorjee highlight that religious identity is negotiated in communication and becomes salient in intercultural encounters, shaping conflict or cooperation.");
+
+    // AI & INTERCULTURALITY (10)
+    addEntry("ai", "What is a major risk of bias in AI systems according to Bender et al.?", ["Always perfect accuracy", "Reproducing harmful biases from training data", "No effect on research", "Only speed issues"], 1, "AI models learn from historical data that contains social inequalities, thus reproducing and even amplifying racism, sexism, and cultural bias.");
+    addEntry("ai", "How might AI limit intercultural representation?", ["Prioritizing Western perspectives, flagging sensitive cultural content", "Supporting all cultures equally", "No bias ever", "Only positive representation"], 0, "AI often reflects Western-centric values and may flag non-Western cultural expressions (e.g., hijab) as 'sensitive', marginalizing certain identities.");
+    addEntry("ai", "What do UNESCO guidelines recommend about AI use in research?", ["Blindly trust AI", "Verify info, cite sources, maintain academic integrity", "Never use AI", "Only for entertainment"], 1, "UNESCO urges researchers to verify AI outputs, cite sources, and maintain critical thinking, using AI as a complement not a replacement.");
+    addEntry("ai", "Example of representational bias in AI: request for image of woman wearing hijab may be flagged as:", ["Neutral", "'sensitive' due to moderation policies", "Celebrated", "Encouraged"], 1, "Moderation policies often flag hijab images as 'sensitive' due to risk-averse algorithms, revealing how AI governance can disproportionately restrict certain religious or cultural representations.");
+    addEntry("ai", "Three interconnected sources of AI bias include:", ["Only algorithms", "Data, algorithms, user interactions", "Only user data", "Only training time"], 1, "Bias emerges from biased training data, algorithmic design choices, and user feedback loops that reinforce problematic patterns over time.");
+    addEntry("ai", "AI's positive contribution to non-native English researchers:", ["Improves clarity and coherence in writing", "Removes critical thinking", "Creates more bias", "Deletes references"], 0, "AI writing assistants help non-native speakers with grammar, clarity, and academic phrasing, increasing confidence and efficiency, though critical review remains essential.");
+    addEntry("ai", "Over-reliance on AI in education may weaken:", ["Spelling only", "Critical thinking skills", "Internet access", "Memory only"], 1, "Students who uncritically accept AI answers risk weakening analytical reasoning, evaluation skills, and intellectual independence.");
+    addEntry("ai", "AI systems reflect which cultural contexts?", ["Global neutral", "Contexts of their developers (e.g., Western norms)", "All indigenous cultures", "Religious only"], 1, "AI models are shaped by the cultural backgrounds, values, and data sources of their (mostly Western) developers, leading to potential marginalization of other perspectives.");
+    addEntry("ai", "What is a holistic approach to mitigate AI bias?", ["Ignore data", "Diverse datasets, transparent algorithms, monitor interactions", "Only increase computing power", "Remove all filters"], 1, "Mitigation requires curating diverse datasets, designing accountable algorithms, and continuously monitoring user-system feedback loops to prevent discrimination.");
+    addEntry("ai", "According to NIST 2022, training data often reflects:", ["Perfect equality", "Historical and social inequalities", "No bias possible", "Pure objectivity"], 1, "Training data embeds historical injustices, which AI then learns and may perpetuate, making fairness a central challenge.");
+
+    // --------------------------------------------------------------
+    // RENDER LECTURE CARDS with paragraph answers (10 per card)
+    // --------------------------------------------------------------
+    const lectureGroups = {
+        cinema: { title: "🎬 Cinema & Cultural Representation", icon: "🎥", entries: masterBank.filter(e => e.lecture === "cinema") },
+        immigration: { title: "🧳 Immigration, Identity & Third Space", icon: "🌍", entries: masterBank.filter(e => e.lecture === "immigration") },
+        religion: { title: "🕊️ Religion in Intercultural Communication", icon: "🙏", entries: masterBank.filter(e => e.lecture === "religion") },
+        ai: { title: "🤖 AI, Bias & Intercultural Research", icon: "⚙️", entries: masterBank.filter(e => e.lecture === "ai") }
+    };
+
+    const lecturesGrid = document.getElementById("lecturesGrid");
+    function buildLectureCards() {
+        let html = "";
+        for (let [key, group] of Object.entries(lectureGroups)) {
+            html += `<div class="card">
+                        <div class="card-header">${group.icon} ${group.title}</div>
+                        <div class="card-body">
+                            <div class="summary"><strong>📌 summary:</strong> ${key === 'cinema' ? 'Cinema shapes perception, stereotypes, colonial narratives & power. Algorithms create bubbles.' : key === 'immigration' ? 'Migration reconfigures identity (Said, Bhabha). Interculturality vs integration, hybridity, Third Space.' : key === 'religion' ? 'Religion as deep structure influences norms & conflict. Interfaith dialogue reduces prejudice.' : 'AI boosts research but risks bias (data/algorithm/user). Western-centrism, representational bias.'}</div>
+                            <div class="qa-paragraphs">`;
+            group.entries.forEach((item, idx) => {
+                html += `<div class="qa-item">
+                            <div class="qa-question">${idx+1}. ${item.text}</div>
+                            <div class="qa-answer">📝 ${item.paragraphAnswer}</div>
+                         </div>`;
+            });
+            html += `</div></div></div>`;
+        }
+        lecturesGrid.innerHTML = html;
+    }
+    buildLectureCards();
+
+    // --------------------------------------------------------------
+    // RENDER COMPLETE Q&A BANK (all 40 questions with paragraph answers)
+    // --------------------------------------------------------------
+    const bankContainer = document.getElementById("qaBankContainer");
+    function renderFullBank() {
+        let gridHtml = `<div class="bank-grid">`;
+        masterBank.forEach((item, idx) => {
+            gridHtml += `<div class="bank-card">
+                            <div class="bank-q">❓ ${idx+1}. ${item.text}</div>
+                            <div class="bank-a">🔍 ${item.paragraphAnswer}</div>
+                         </div>`;
+        });
+        gridHtml += `</div>`;
+        bankContainer.innerHTML = gridHtml;
+    }
+    renderFullBank();
+
+    // --------------------------------------------------------------
+    // QUIZ LOGIC: random 5 questions from masterBank
+    // --------------------------------------------------------------
+    let currentQuiz = []; // { qData, selected }
+    let quizSubmittedFlag = false;
+    const quizContainerDiv = document.getElementById("quizContainer");
+    const submitQuiz = document.getElementById("submitQuizBtn");
+    const newQuizBtnElem = document.getElementById("newQuizBtn");
+    const resultAreaDiv = document.getElementById("quizResultArea");
+
+    function getRandomQuizQuestions(count) {
+        const shuffled = [...masterBank];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled.slice(0, count).map(q => ({ qData: q, selected: null }));
+    }
+
+    function renderQuiz() {
+        if (!currentQuiz.length) currentQuiz = getRandomQuizQuestions(5);
+        quizSubmittedFlag = false;
+        resultAreaDiv.style.display = "none";
+        let quizHtml = '';
+        currentQuiz.forEach((item, idx) => {
+            const q = item.qData;
+            const selectedVal = item.selected !== null ? item.selected : -1;
+            quizHtml += `<div class="quiz-question" data-qidx="${idx}">
+                            <div class="question-text">${idx+1}. ${q.text}</div>
+                            <div class="options">`;
+            q.options.forEach((opt, optIdx) => {
+                const checked = selectedVal === optIdx ? 'checked' : '';
+                quizHtml += `<label class="option">
+                                <input type="radio" name="q${idx}" value="${optIdx}" ${checked} data-idx="${idx}" data-opt="${optIdx}">
+                                <span>${String.fromCharCode(65+optIdx)}. ${opt}</span>
+                             </label>`;
+            });
+            quizHtml += `</div><div class="feedback" id="fb-${idx}" style="display: none;"></div></div>`;
+        });
+        quizContainerDiv.innerHTML = quizHtml;
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const qIdx = parseInt(e.target.getAttribute('data-idx'));
+                const optVal = parseInt(e.target.value);
+                if (!isNaN(qIdx) && currentQuiz[qIdx]) {
+                    currentQuiz[qIdx].selected = optVal;
+                    const fb = document.getElementById(`fb-${qIdx}`);
+                    if (fb) fb.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    function evaluateQuizFunc() {
+        if (quizSubmittedFlag) return;
+        let correctCount = 0;
+        for (let i = 0; i < currentQuiz.length; i++) {
+            const item = currentQuiz[i];
+            const selected = item.selected;
+            const correctIdx = item.qData.correctIdx;
+            const fbDiv = document.getElementById(`fb-${i}`);
+            if (fbDiv) {
+                if (selected === null) {
+                    fbDiv.style.display = 'block';
+                    fbDiv.className = 'feedback wrong';
+                    fbDiv.innerHTML = `⚠️ No answer. Correct: ${item.qData.options[correctIdx]}. <br> 📘 ${item.qData.paragraphAnswer.substring(0, 120)}...`;
+                    continue;
+                }
+                if (selected === correctIdx) {
+                    correctCount++;
+                    fbDiv.style.display = 'block';
+                    fbDiv.className = 'feedback correct';
+                    fbDiv.innerHTML = `✅ Correct! ${item.qData.paragraphAnswer}`;
+                } else {
+                    fbDiv.style.display = 'block';
+                    fbDiv.className = 'feedback wrong';
+                    fbDiv.innerHTML = `❌ Wrong. Correct: ${item.qData.options[correctIdx]}. <br> 📘 ${item.qData.paragraphAnswer}`;
+                }
+            }
+        }
+        quizSubmittedFlag = true;
+        const percent = Math.round((correctCount/currentQuiz.length)*100);
+        resultAreaDiv.style.display = 'block';
+        resultAreaDiv.innerHTML = `🎯 Score: ${correctCount} / ${currentQuiz.length} (${percent}%) — ${percent >= 70 ? 'Excellent intercultural awareness!' : 'Review the Q&A bank and try again.'}`;
+    }
+
+    function resetQuiz() {
+        currentQuiz = getRandomQuizQuestions(5);
+        renderQuiz();
+    }
+
+    submitQuiz.addEventListener('click', evaluateQuizFunc);
+    newQuizBtnElem.addEventListener('click', () => { resetQuiz(); });
+    // initial quiz load
+    currentQuiz = getRandomQuizQuestions(5);
+    renderQuiz();
+</script>
+</body>
+</html>
